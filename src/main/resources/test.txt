@@ -1,0 +1,27 @@
+【1】CREATE FUNCTION案例
+CREATE OR REPLACE FUNCTION "fun"("s" IN NUMBERR) RETURN INTEGER
+AS
+BEGIN
+    RETURN "s"+1;
+END;
+【】CREATE TABLE案例
+CREATE TABLE "tab" ("code" CHAR(5));
+【2】SELECT案例
+SELECT "a",SUM("b") FROM "C" WHERE "a">1 AND "a"<=10 ORDER BY "b";
+SELECT SUM(-1) FROM DUAL;
+【select转换】
+___________
+SELECT
+    "dname",
+    "loc"
+FROM
+    "emp",
+    "dept"
+WHERE "emp"."deptno" = "dept"."deptno"(+)
+    AND "salary" > 50000
+____________
+SELECT
+    "dname",
+    "loc"
+FROM "emp" LEFT OUTER JOIN "dept" ON "emp"."deptno" = "dept"."deptno"
+WHERE "salary" > 50000;
