@@ -154,7 +154,7 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitStandard_function(PlSqlParser.Standard_functionContext ctx) {
         System.out.println("visitStandard_function：" + ctx.getText());
-        TestStandardFuncVisiotr loader=new TestStandardFuncVisiotr();
+        TestStandardFuncVisitor loader=new TestStandardFuncVisitor();
         String function=loader.visitStandard_function(ctx);
         select_elems.set(counter,select_elems.get(counter).replace(ctx.getText(),function));
         return null;
@@ -163,20 +163,30 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
     //LPAD等
     @Override
     public String visitGeneral_element(PlSqlParser.General_elementContext ctx) {
-        System.out.println("visitGeneral_element");
-        TestStandardFuncVisiotr loader=new TestStandardFuncVisiotr();
+        System.out.println("visitGeneral_element：" + ctx.getText());
+        TestStandardFuncVisitor loader=new TestStandardFuncVisitor();
         String function=loader.visitGeneral_element(ctx);
-        select_elems.set(counter,function);
+        select_elems.set(counter, select_elems.get(counter).replace(ctx.getText(),function));
         return null;
     }
 
-    //    @Override
-//    public String visitVariable_name(PlSqlParser.Variable_nameContext ctx) {
-//        if (readType == where_var) {
-//            where_vars.add(ctx.getText());
-//        }
-//        return visitChildren(ctx);
-//    }
+    //包含系统变量等
+    @Override
+    public String visitVariable_name(PlSqlParser.Variable_nameContext ctx) {
+        System.out.println("visitVariable_name：" + ctx.getText());
+        switch (ctx.getText()) {
+            case "SYSDATE", "USER" -> {
+                select_elems.set(counter, ctx.getText() + "()");
+            }
+            case "SYSTIMESTAMP" -> {
+                select_elems.set(counter, "CURRENT_TIMESTAMP");
+            }
+            default -> {
+                System.out.println("变量尚未录入");
+            }
+        }
+        return visitChildren(ctx);
+    }
 
     //from子句
     @Override

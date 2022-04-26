@@ -19,6 +19,13 @@
             <version>4.9.3</version>
         </dependency>
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <scope>system</scope>
+            <version>1.2.5_preview_01</version>
+            <systemPath>${project.basedir}/lib/druid-1.2.5_preview_01.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.abego.treelayout</groupId>
             <artifactId>org.abego.treelayout.core</artifactId>
             <version>1.0.3</version>
@@ -27,6 +34,12 @@
             <groupId>org.apache.ivy</groupId>
             <artifactId>ivy</artifactId>
             <version>2.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

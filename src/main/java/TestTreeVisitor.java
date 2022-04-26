@@ -18,15 +18,6 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitDatatype(PlSqlParser.DatatypeContext ctx) {
-        TestDataTypeVisitor loader=new TestDataTypeVisitor();
-        String datatype=loader.visitDatatype(ctx);
-        System.out.println("转换后的Datatype为:"+datatype);
-        //Stat.put(ctx,datatype);
-        return null;
-    }
-
-    @Override
     public Void visitQuery_block(PlSqlParser.Query_blockContext ctx) {
         TestSelectStatVisitor loader=new TestSelectStatVisitor();
         String stat=loader.visitQuery_block(ctx);
@@ -37,18 +28,17 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
 
     @Override
     public Void visitStandard_function(PlSqlParser.Standard_functionContext ctx) {
-        TestStandardFuncVisiotr loader=new TestStandardFuncVisiotr();//TestTypeAndFuncVisitor是专门转换datatype和function的类
-        String function=loader.visitStandard_function(ctx);//把以standard_function为根的子树都放到TestTypeAndFuncVisitor处理
-        //Stat.put(ctx,function);//把转换后的"fun([para,...])"放入Map里
-        System.out.println("转换后的Function为:"+function);
+        TestStandardFuncVisitor loader = new TestStandardFuncVisitor();
+        String function = loader.visitStandard_function(ctx);
+        System.out.println("转换后的Function为:\n\t"+function);
         return null;//阻止向下访问，同时结束函数，释放调用TestTypeAndFuncVisitor占用的空间
     }
 
     @Override
     public Void visitCreate_table(PlSqlParser.Create_tableContext ctx){
-
-
-        System.out.println("转换后的Create语句为:");
+        TestCreateTableVisitor loader = new TestCreateTableVisitor();
+        String function = loader.visitCreate_table(ctx);
+        System.out.println("转换后的Create语句为:\n\t"+function);
         return null;
     }
 

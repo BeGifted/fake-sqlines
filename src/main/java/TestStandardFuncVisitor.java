@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Objects;
 
 //有部分内置函数的参数部分转换起来比较复杂，没有普适规律
-public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
+public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
     List<String> function_non_trans;    //无需转换的内置函数
     List<String> function_cannot_trans; //无法转换的内置函数
     Map<String, String> function_non_paras;     //不涉及参数、可以直接换函数名
 //    List<String> function_with_paras;    //涉及参数的内置函数映射
     String paras_in_paren, func_name;
 
-    public TestStandardFuncVisiotr(){
+    public TestStandardFuncVisitor(){
         paras_in_paren="";
         func_name ="";
         //在下面写死内置函数的映射关系
@@ -139,7 +139,7 @@ public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
         return null;
     }
 
-    //获得括号内的内容，即参数
+    //获得参数
     public String getTextInBrackets(ParserRuleContext ctx){
         StringBuilder str=new StringBuilder("");
         boolean start=false;
@@ -165,8 +165,6 @@ public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
         return str.toString();
     }
 
-    //有些函数没能被概括，函数名写在general_element中
-    //还有待研究
     @Override
     public String visitGeneral_element(PlSqlParser.General_elementContext ctx) {
         visitChildren(ctx);

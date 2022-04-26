@@ -1,4 +1,4 @@
-package sql;// Generated from F:/IDEAproject/helloworld/src\PlSqlParser.g4 by ANTLR 4.9.2
+package sql;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**

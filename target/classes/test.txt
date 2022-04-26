@@ -1,15 +1,3 @@
-【1】CREATE FUNCTION案例
-CREATE OR REPLACE FUNCTION "fun"("s" IN NUMBERR) RETURN INTEGER
-AS
-BEGIN
-    RETURN "s"+1;
-END;
-【】CREATE TABLE案例
-CREATE TABLE "tab" ("code" CHAR(5));
-【2】SELECT案例
-SELECT "a",SUM("b") FROM "C" WHERE "a">1 AND "a"<=10 ORDER BY "b";
-SELECT SUM(-1) FROM DUAL;
-【select转换】
 ___________
 SELECT
     "dname",
@@ -25,3 +13,26 @@ SELECT
     "loc"
 FROM "emp" LEFT OUTER JOIN "dept" ON "emp"."deptno" = "dept"."deptno"
 WHERE "salary" > 50000;
+
+
+
+CREATE TABLE T_DICT (
+                  ID VARCHAR2(32) DEFAULT sys_guid()  NOT NULL ,
+                  CLASS_ID VARCHAR2(20) ,
+                  CLASS_NAME VARCHAR2(100) ,
+                  CLASS_ENAME VARCHAR2(2000) ,
+                  KEY_ID VARCHAR2(20) ,
+                  KEY_NAME VARCHAR2(500) ,
+                  KEY_ENAME VARCHAR2(2000) ,
+                  OR_VALID_D VARCHAR2(1) DEFAULT 0 ,
+                  MEMO VARCHAR2(2000) ,
+                  TIME_MARK TIMESTAMP(6) ,
+                  STA VARCHAR2(10) DEFAULT 1 ,
+                  KEY_SEQ NUMBER(20) ,
+                  CREATE_PRSN VARCHAR2(64) ,
+                  CREATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
+                  UPDATE_PRSN VARCHAR2(64) ,\n" +
+                  UPDATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
+                  FDELETE_ID VARCHAR2(1) DEFAULT 0  NOT NULL ,
+                  constraint PK_T_DICT primary key(ID)
+                );
