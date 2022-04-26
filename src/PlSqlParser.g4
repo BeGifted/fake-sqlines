@@ -6,7 +6,7 @@ options {
 }
 
 @parser::postinclude {
-#include <PlSqlParserBase.h>
+#include <sql.PlSqlParserBase.h>
 }
 
 sql_script

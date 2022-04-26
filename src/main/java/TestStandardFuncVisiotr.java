@@ -1,12 +1,12 @@
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import sql.PlSqlParser;
+import sql.PlSqlParserBaseVisitor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 //有部分内置函数的参数部分转换起来比较复杂，没有普适规律
 public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
@@ -49,11 +49,12 @@ public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
     }
 
 
-    //日期类的还要进一步琢磨
+    //日期类TODO
     String TransFuncWithParas(ParserRuleContext ctx){
         List<String> paraList=null;
         if(paras_in_paren.contains(","))        //有可能只有一个参数
             paraList= List.of(paras_in_paren.split(","));
+        System.out.println("func_name：" + func_name);
         switch (func_name) {
             case "INSTR" -> {
                 assert paraList != null;
@@ -104,6 +105,9 @@ public class TestStandardFuncVisiotr  extends PlSqlParserBaseVisitor<String> {
             }
             case "TRUNC"->{
 
+            }
+            case "SYS_GUID"->{
+                return "replace(uuid(), '-', '')";
             }
         }
         return "尚未录入映射模型或需要自定义函数";

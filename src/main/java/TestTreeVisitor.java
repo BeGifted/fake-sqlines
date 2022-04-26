@@ -2,6 +2,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import sql.PlSqlParser;
+import sql.PlSqlParserBaseVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,6 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
         return null;
     }
 
-    //在这里，遍历到standard_function，这个节点对应通用内置函数
     @Override
     public Void visitStandard_function(PlSqlParser.Standard_functionContext ctx) {
         TestStandardFuncVisiotr loader=new TestStandardFuncVisiotr();//TestTypeAndFuncVisitor是专门转换datatype和function的类

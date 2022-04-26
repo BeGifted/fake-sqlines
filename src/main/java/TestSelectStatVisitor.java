@@ -1,6 +1,6 @@
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import sql.PlSqlParser;
+import sql.PlSqlParserBaseVisitor;
 
 import java.util.*;
 
@@ -99,6 +99,22 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
                     }
                     where_clause=whereBulider.toString();
                 }
+                case TestStrategies.Concat -> {
+                    int siz = select_elems.size();
+                    for(int i = 0; i < siz; i++) {
+                        String select_elem = select_elems.get(i);
+                        if(select_elem.contains("||")){
+                            select_elem = select_elem.replace("||", ",");
+                            select_elem = "CONCAT(" + select_elem + ")";
+                            select_elems.set(i, select_elem);
+                        }
+                    }
+                    selectStat = new StringBuilder("SELECT ");
+                    for(int i = 0; i < siz; i++){
+                        selectStat.append(select_elems.get(i));
+                        if(i < siz - 1) selectStat.append(",");
+                    }
+                }
                 default -> {
                     System.out.println("异常策略"+ST);
                 }
@@ -117,7 +133,9 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         readType=non;
         for(int i=0;i<select_elems.size();i++){
             selectStat.append(select_elems.get(i));
-            System.out.println(select_elems.get(i));
+            if(select_elems.get(i).contains("||")){
+                TransStrategy.add(TestStrategies.Concat);
+            }
             if(i<select_elems.size()-1)
                 selectStat.append(",");
         }

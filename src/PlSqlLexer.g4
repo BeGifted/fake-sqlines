@@ -5,7 +5,7 @@ options {
 }
 
 @lexer::postinclude {
-#include <PlSqlLexerBase.h>
+#include <sql.PlSqlLexerBase.h>
 }
 
 ABORT:                        'ABORT';
