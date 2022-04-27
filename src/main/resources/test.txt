@@ -17,7 +17,7 @@ WHERE "salary" > 50000;
 
 
 CREATE TABLE T_DICT (
-                  ID VARCHAR2(32) DEFAULT sys_guid()  NOT NULL ,
+                  ID VARCHAR2(32) DEFAULT SYS_GUID() NOT NULL ,
                   CLASS_ID VARCHAR2(20) ,
                   CLASS_NAME VARCHAR2(100) ,
                   CLASS_ENAME VARCHAR2(2000) ,
@@ -30,9 +30,25 @@ CREATE TABLE T_DICT (
                   STA VARCHAR2(10) DEFAULT 1 ,
                   KEY_SEQ NUMBER(20) ,
                   CREATE_PRSN VARCHAR2(64) ,
-                  CREATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
+                  CREATE_TIME TIMESTAMP(6) DEFAULT SYSTIMESTAMP ,
                   UPDATE_PRSN VARCHAR2(64) ,
-                  UPDATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
+                  UPDATE_TIME TIMESTAMP(6) DEFAULT SYSTIMESTAMP ,
                   FDELETE_ID VARCHAR2(1) DEFAULT 0  NOT NULL ,
-                  constraint PK_T_DICT primary key(ID)
+                  CONSTRAINT PK_T_DICT PRIMARY KEY(ID)
                 );
+
+
+SELECT LPAD('abc',7),'def' FROM DUAL;
+
+
+SELECT LISTAGG('t2.id', ',') WITHIN GROUP (ORDER BY 't2.id')
+FROM T_BASE_USERDEPT 't1' LEFT JOIN T_BASE_DEPT 't2' ON 't1.fdept_id' = 't2.id'
+WHERE 't1.fuser_id' = 1;
+
+SELECT
+    GROUP_CONCAT(t2.id
+    order by
+        t2.id SEPARATOR ',')
+from
+    T_BASE_USERDEPT t1 left join T_BASE_DEPT t2 on t1.fdept_id = t2.id
+where t1.fuser_id = 1;

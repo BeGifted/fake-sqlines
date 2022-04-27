@@ -1,12 +1,11 @@
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import sql.PlSqlParser;
 import sql.PlSqlParserBaseVisitor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 //有部分内置函数的参数部分转换起来比较复杂，没有普适规律
 public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
@@ -49,38 +48,35 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
     }
 
 
-    //日期类TODO
+    //TODO 日期类
     String TransFuncWithParas(ParserRuleContext ctx){
-        List<String> paraList=null;
+        List<String> paraList = new ArrayList<>();
         if(paras_in_paren.contains(","))        //有可能只有一个参数
-            paraList= List.of(paras_in_paren.split(","));
-        System.out.println("func_name：" + func_name);
+            paraList = List.of(paras_in_paren.split(","));
+        else
+            paraList.add(paras_in_paren);
+        System.out.println("paraList：" + paraList);
         switch (func_name) {
             case "INSTR" -> {
-                assert paraList != null;
                 if (paraList.size() == 2)
                     return ctx.getText();
                 else if (paraList.size() == 3)
                     return String.format("LOCATE(%s,%s)",paraList.get(1),paraList.get(0));
             }
             case "LPAD", "RPAD" -> {
-                assert paraList != null;
                 if (paraList.size() == 2)
                     return String.format("%s(%s,' ')",func_name,paras_in_paren);
                 else return ctx.getText();
             }
             case "REPLACE" -> {
-                assert paraList != null;
                 if (paraList.size() == 2)
                     return String.format("%s(%s,'')",func_name,paras_in_paren);
                 else return ctx.getText();
             }
             case "ADD_MONTHS" -> {
-                assert paraList != null;
                 return String.format("TIMESTAMPADD(MONTH,%s,%s)",paraList.get(1),paraList.get(0));
             }
             case "BITAND"->{
-                assert paraList != null;
                 return String.format("(%s & %s)",paraList.get(0),paraList.get(1));
             }
             case "CONVERT"->{
@@ -97,7 +93,6 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 return String.format("%s(%s)",paraList.get(0),paraList.get(2));
             }
             case "REMAINDER"->{
-                assert paraList != null;
                 return String.format("(%s - %s*ROUND(%s/%s))",paraList.get(0),paraList.get(1),paraList.get(0),paraList.get(1));
             }
             case "TANH"->{
@@ -108,6 +103,26 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
             }
             case "SYS_GUID"->{
                 return "replace(uuid(), '-', '')";
+            }
+            case "LISTAGG"->{
+                StringBuilder sb = new StringBuilder();
+                sb.append("GROUP_CONCAT(");
+                if(paraList.get(1).equals("'") && paraList.get(2).equals("'")) {
+                    sb.append(paraList.get(0)).append(" ");
+                    sb.append("ORDER BY ");
+                    sb.append(paraList.get(3));
+                    sb.append("SEPARATOR ");
+                    sb.append("',' ");
+                    sb.append(")\n");
+                }else {
+                    sb.append(paraList.get(0)).append(" ");
+                    sb.append("ORDER BY ");
+                    sb.append(paraList.get(2)).append(" ");
+                    sb.append("SEPARATOR ");
+                    sb.append(paraList.get(1));
+                    sb.append(")\n");
+                }
+                return sb.toString();
             }
         }
         return "尚未录入映射模型或需要自定义函数";
@@ -120,23 +135,23 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
 
     @Override
     public String visitNumeric_function(PlSqlParser.Numeric_functionContext ctx) {
-        func_name=ctx.getChild(0).getText();
-        paras_in_paren=getTextInBrackets(ctx);
-        return null;
+        func_name = ctx.getChild(0).getText();
+        paras_in_paren = getTextInBrackets(ctx);
+        return visitChildren(ctx);
     }
 
     @Override
     public String visitString_function(PlSqlParser.String_functionContext ctx) {
         func_name=ctx.getChild(0).getText();
         paras_in_paren=getTextInBrackets(ctx);
-        return null;
+        return visitChildren(ctx);
     }
 
     @Override
     public String visitOther_function(PlSqlParser.Other_functionContext ctx) {
         func_name=ctx.getChild(0).getText();
         paras_in_paren=getTextInBrackets(ctx);
-        return null;
+        return visitChildren(ctx);
     }
 
     //获得参数
@@ -189,4 +204,12 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
         paras_in_paren=paras_in_paren.substring(1,paras_in_paren.length()-2);
         return null;
     }
+
+    @Override
+    public String visitOrder_by_clause(PlSqlParser.Order_by_clauseContext ctx) {
+        int siz = ctx.getChildCount();
+        paras_in_paren += "," + ctx.getChild(siz - 1).getText();
+        return null;
+    }
+
 }

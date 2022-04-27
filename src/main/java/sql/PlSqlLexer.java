@@ -1,4 +1,3 @@
-// Generated from F:/IDEAproject/helloworld/src\sql.PlSqlLexer.g4 by ANTLR 4.9.2
 package sql;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

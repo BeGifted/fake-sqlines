@@ -21,7 +21,7 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
     public Void visitQuery_block(PlSqlParser.Query_blockContext ctx) {
         TestSelectStatVisitor loader=new TestSelectStatVisitor();
         String stat=loader.visitQuery_block(ctx);
-        System.out.println("转换后的Select语句为:\n\t"+stat);
+        System.out.println("转换后的Select语句为:\n"+stat);
         //Stat.put(ctx,datatype);
         return null;
     }
@@ -30,7 +30,7 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
     public Void visitStandard_function(PlSqlParser.Standard_functionContext ctx) {
         TestStandardFuncVisitor loader = new TestStandardFuncVisitor();
         String function = loader.visitStandard_function(ctx);
-        System.out.println("转换后的Function为:\n\t"+function);
+        System.out.println("转换后的Function为:\n"+function);
         return null;//阻止向下访问，同时结束函数，释放调用TestTypeAndFuncVisitor占用的空间
     }
 
@@ -38,7 +38,7 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
     public Void visitCreate_table(PlSqlParser.Create_tableContext ctx){
         TestCreateTableVisitor loader = new TestCreateTableVisitor();
         String function = loader.visitCreate_table(ctx);
-        System.out.println("转换后的Create语句为:\n\t"+function);
+        System.out.println("转换后的Create语句为:\n"+function);
         return null;
     }
 

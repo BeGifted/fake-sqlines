@@ -4,6 +4,7 @@
  */
 public class TestAlterTableVisitor {
 
+    //TODO alterTable
     ///**
     //	 * {@inheritDoc}
     //	 *

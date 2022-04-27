@@ -35,7 +35,6 @@ public class TestCreateTableVisitor extends PlSqlParserBaseVisitor<String> {
         System.out.println("/*");
         visitChildren(ctx);
         System.out.println("*/");
-
         int siz = create_elems.size();
         for(int i = 0; i < siz; i++){  //忽略0
             createStat.append(create_elems.get(i));

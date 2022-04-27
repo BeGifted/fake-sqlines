@@ -1,3 +1,4 @@
+import com.sun.java.accessibility.util.Translator;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import sql.PlSqlParser;
 import sql.PlSqlParserBaseVisitor;
@@ -40,25 +41,18 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         System.out.println("/*");
         visitChildren(ctx);
         System.out.println("*/");
-        /*
-         @FROM
-         @WHERE
-         @Outer_join_sign   size+1
-         null
-         */
 
         loadStrategy();
         System.out.println(TransStrategy.size());
-        if(TransStrategy.size()==0) {
-            System.out.println("无需转换");
-            return ctx.getText();
-        }
+//        if(TransStrategy.size()==0) {
+//            return ctx.getText();
+//        }
         if(!from_clause.isEmpty()){
             selectStat.append(" ").append(from_clause);
             if(!where_clause.isEmpty()){
                 selectStat.append(" ").append(where_clause);
             }
-            return selectStat.toString();
+            return selectStat.append(";").toString();
         }
         if(clauses!=null && !clauses.isEmpty())
             for (String clause : clauses) selectStat.append(clause);
@@ -131,13 +125,14 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         visitChildren(ctx);     //可能会调用函数
         System.out.println("---select结束---");
         readType=non;
+
         for(int i=0;i<select_elems.size();i++){
             selectStat.append(select_elems.get(i));
             if(select_elems.get(i).contains("||")){
                 TransStrategy.add(TestStrategies.Concat);
             }
             if(i<select_elems.size()-1)
-                selectStat.append(",");
+                selectStat.append(", ");
         }
         return null;
     }
@@ -181,9 +176,6 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
             case "SYSTIMESTAMP" -> {
                 select_elems.set(counter, "CURRENT_TIMESTAMP");
             }
-            default -> {
-                System.out.println("变量尚未录入");
-            }
         }
         return visitChildren(ctx);
     }
@@ -199,6 +191,8 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         from_tabs=new ArrayList<>();
         readType=from_tab;
         visitChildren(ctx);
+        String tmp = SQLtmp.SQL;
+        from_clause = tmp.substring(tmp.indexOf("FROM"), tmp.indexOf("WHERE"));
         readType=non;
         return null;
     }
@@ -211,15 +205,23 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
 
     //where子句
     @Override
-    public String visitWhere_clause(PlSqlParser.Where_clauseContext ctx) {
+    public String visitWhere_clause(PlSqlParser.Where_clauseContext ctx){
         System.out.println("@WHERE");
         where_vars=new ArrayList<>();
         where_exprs=new ArrayList<>();
         expr_oprs=new ArrayList<>();
         readType=where_var;
         visitChildren(ctx);     //这里最有可能有方言
+        String tmp = SQLtmp.SQL;
+        where_clause = tmp.substring(tmp.indexOf("WHERE"), tmp.length() - 1);
         readType=non;
         return null;
+    }
+
+    @Override
+    public String visitExpressions(PlSqlParser.ExpressionsContext ctx) {
+        TestExpressionVisitor loader = new TestExpressionVisitor();
+        return loader.visitExpressions(ctx);
     }
 
     //expression最终一定能划分成一个个Unary_logical_expression
@@ -228,7 +230,6 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         visitChildren(ctx);     //where方言通常在Unary_logical_expression子树中
         if(readType==where_var){
             where_exprs.add(ctx.getText());
-            System.out.println("where内容：" + ctx.getText());
         }
         return null;
     }
