@@ -11,11 +11,11 @@ import java.util.List;
 public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
     public ParseTreeProperty<String> Stat = new ParseTreeProperty<String>();
 
-    @Override
-    public Void visitConstant(PlSqlParser.ConstantContext ctx) {
-        System.out.println(ctx.getText());
-        return null;
-    }
+//    @Override
+//    public Void visitConstant(PlSqlParser.ConstantContext ctx) {
+//        System.out.println(ctx.getText());
+//        return null;
+//    }
 
     @Override
     public Void visitQuery_block(PlSqlParser.Query_blockContext ctx) {

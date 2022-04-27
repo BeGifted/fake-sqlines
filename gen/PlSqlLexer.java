@@ -1,4 +1,4 @@
-// Generated from F:/IDEAproject/helloworld/src\sql.PlSqlLexer.g4 by ANTLR 4.9.2
+// Generated from C:/Users/mabeg/Desktop/fake-sqlines/src\PlSqlLexer.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -1876,7 +1876,7 @@ public class PlSqlLexer extends PlSqlLexerBase {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "sql.PlSqlLexer.g4"; }
+	public String getGrammarFileName() { return "PlSqlLexer.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

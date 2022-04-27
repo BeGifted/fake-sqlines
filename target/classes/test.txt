@@ -31,7 +31,7 @@ CREATE TABLE T_DICT (
                   KEY_SEQ NUMBER(20) ,
                   CREATE_PRSN VARCHAR2(64) ,
                   CREATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
-                  UPDATE_PRSN VARCHAR2(64) ,\n" +
+                  UPDATE_PRSN VARCHAR2(64) ,
                   UPDATE_TIME TIMESTAMP(6) DEFAULT systimestamp ,
                   FDELETE_ID VARCHAR2(1) DEFAULT 0  NOT NULL ,
                   constraint PK_T_DICT primary key(ID)
