@@ -6,6 +6,7 @@ import sql.PlSqlParser;
 import sql.PlSqlParserBaseVisitor;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 //有部分内置函数的参数部分转换起来比较复杂，没有普适规律
 public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
@@ -28,8 +29,9 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
         function_non_paras.put("LENGTH","CHAR_LENGTH");
         function_non_paras.put("CHR","CHAR");
         function_non_paras.put("NVL","IFNULL");
+        function_non_paras.put("NVL2","IF");
+        function_non_paras.put("HEXTORAW","UNHEX");
         function_non_paras.put("LENGTHB","LENGTH");
-        //function_with_paras=List.of("INSTR","LAPD","LTRIM","REPLACE","RPAD","RTRIM","ADD_MONTHS","BITAND","EXTRACT");
     }
 
     //转换内置函数
@@ -47,8 +49,6 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
         else return TransFuncWithParas(ctx);
     }
 
-
-    //TODO 日期类
     String TransFuncWithParas(ParserRuleContext ctx){
         List<String> paraList = new ArrayList<>();
         if(paras_in_paren.contains(","))        //有可能只有一个参数
@@ -61,7 +61,7 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 if (paraList.size() == 2)
                     return ctx.getText();
                 else if (paraList.size() == 3)
-                    return String.format("LOCATE(%s,%s)",paraList.get(1),paraList.get(0));
+                    return String.format("LOCATE(%s,%s,%s)",paraList.get(1),paraList.get(0),paraList.get(2));
             }
             case "LPAD", "RPAD" -> {
                 if (paraList.size() == 2)
@@ -74,7 +74,7 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 else return ctx.getText();
             }
             case "ADD_MONTHS" -> {
-                return String.format("TIMESTAMPADD(MONTH,%s,%s)",paraList.get(1),paraList.get(0));
+                return String.format("TIMESTAMPADD(MONTH,%s,%s)",paraList.get(1),SpecialTrans(paraList.get(0)));
             }
             case "BITAND"->{
                 return String.format("(%s & %s)",paraList.get(0),paraList.get(1));
@@ -90,7 +90,7 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
             }
             case "EXTRACT"->{
                 paraList=List.of(paras_in_paren.split(" "));
-                return String.format("%s(%s)",paraList.get(0),paraList.get(2));
+                return String.format("%s(%s)",paraList.get(0),SpecialTrans(paraList.get(2)));
             }
             case "REMAINDER"->{
                 return String.format("(%s - %s*ROUND(%s/%s))",paraList.get(0),paraList.get(1),paraList.get(0),paraList.get(1));
@@ -99,7 +99,19 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 return String.format("(EXP(2*%s) - 1)/(EXP(2*%s) + 1)",paras_in_paren,paras_in_paren);
             }
             case "TRUNC"->{
-
+                if(Pattern.compile("^[-\\+]?[\\d]*$").matcher(paraList.get(0)).matches()){
+                    if(paraList.size()==1)
+                        return String.format("TRUNCATE(%s,0)",paras_in_paren);
+                    else return String.format("TRUNCATE(%s)",paras_in_paren);
+                }else{
+                    if(paraList.size() == 1){
+                        return String.format("TRUNCATE(%s)",SpecialTrans(paraList.get(0)));
+                    }else if(paraList.get(1).equals("'DD'")){
+                        return String.format("TRUNCATE(%s)",SpecialTrans(paraList.get(0)));
+                    }else {
+                        return String.format("DATE_FORMAT(%s, '%Y-%m-01')",SpecialTrans(paraList.get(0)));
+                    }
+                }
             }
             case "SYS_GUID"->{
                 return "replace(uuid(), '-', '')";
@@ -109,28 +121,63 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 sb.append("GROUP_CONCAT(");
                 if(paraList.get(1).equals("'") && paraList.get(2).equals("'")) {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ");
-                    sb.append(paraList.get(3));
-                    sb.append("SEPARATOR ");
-                    sb.append("',' ");
-                    sb.append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(3)).append("SEPARATOR ").append("',' ").append(")\n");
                 }else {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ");
-                    sb.append(paraList.get(2)).append(" ");
-                    sb.append("SEPARATOR ");
-                    sb.append(paraList.get(1));
-                    sb.append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(2)).append(" ").append("SEPARATOR ").append(paraList.get(1)).append(")\n");
                 }
                 return sb.toString();
             }
+            case "TO_CHAR"->{
+                if(Pattern.compile("^[-\\+]?[\\d]*$").matcher(paraList.get(0)).matches()){
+//                  //TODO TO_CHAR(number, format)
+                    //规则非常复杂 http://oracle.chinaitlab.com/exploiture/798048.html
+                }else{
+                    return String.format("DATE_FORMAT(%s,%s)",SpecialTrans(paraList.get(0)),SpecialTrans(paraList.get(1)));
+                }
+            }
+            case "TO_DATE"->{
+                return String.format("STR_TO_DATE(%s, %s)",paraList.get(0),SpecialTrans(paraList.get(1)));
+            }
+            case "TO_TIMESTAMP"->{
+                return String.format("TO_TIMESTAMP(%s)",SpecialTrans(paraList.get(0)));
+            }
+            case "TO_NUMBER"->{
+                //TODO TO_NUMBER
+            }
+
         }
         return "尚未录入映射模型或需要自定义函数";
     }
 
-    //一些函数的日期相关参数需要变更格式
-    String TransDateFormate(String date){
-        return date;
+    /**
+     * 获取小数点多少位
+     */
+    Integer getDecimalPlace(String str) {
+        int round = 0;
+        if (str.indexOf(".") > 0) {
+            round = str.split("\\.")[1].length();
+        }
+        return round;
+    }
+
+    //Oracle保留字或日期函数参数格式
+    String SpecialTrans(String para){
+        switch (para){
+            case "CURRENT_DATE","CURRENT_TIMESTAMP"->{  return "NOW()"; }
+            case "SYSDATE","SYSDATE "->{   return "SYSDATE()"; }
+            case "SYSTIMESTAMP"->{  return "CURRENT_TIMESTAMP"; }
+            case "USER"->{  return "USER()";    }
+        }
+        List<List<String>> FS=List.of(
+                List.of("YYYY","%Y"),List.of("YY","%y"),List.of("RRRR","%Y"),List.of("RR","%y"),
+                List.of("MON","%b"),List.of("MONTH","%M"),List.of("MM","%m"),List.of("DY","%a"),
+                List.of("DD","%d"),List.of("HH24","%H"),List.of("HH","%h"),List.of("HH12","%h"),
+                List.of("MI","%i"),List.of("SS","%s")
+        );
+        for(List<String> map:FS)
+            if(para.contains(map.get(0)))   para=para.replace(map.get(0),map.get(1));
+        return para;
     }
 
     @Override

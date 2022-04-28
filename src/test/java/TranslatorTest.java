@@ -10,7 +10,8 @@ public class TranslatorTest extends TestCase{
 
     public void testSqlSelect1() {
         //selectTest
-        String sqlSelect1= "SELECT LPAD('abc',7),'def' FROM DUAL;";
+        String sqlSelect1= "SELECT LPAD('abc',7),'def' FROM DUAL;" +
+                "SELECT TRUNC(SYSDATE) FROM DUAL;";
         SQLtmp.SQL = sqlSelect1;
         ANTLRInputStream input = new ANTLRInputStream(sqlSelect1);   //将输入转成antlr的input流
         //词法分析

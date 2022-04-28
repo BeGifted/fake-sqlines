@@ -71,7 +71,6 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
                 tokens.add(tnode);
             }
         }
-
         return tokens;
     }
 }
