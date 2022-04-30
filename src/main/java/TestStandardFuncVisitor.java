@@ -130,7 +130,7 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
             }
             case "TO_CHAR"->{
                 if(Pattern.compile("^[-\\+]?[\\d]*$").matcher(paraList.get(0)).matches()){
-//                  //TODO TO_CHAR(number, format)
+                    //TODO TO_CHAR(number, format)
                     //规则非常复杂 http://oracle.chinaitlab.com/exploiture/798048.html
                 }else{
                     return String.format("DATE_FORMAT(%s,%s)",SpecialTrans(paraList.get(0)),SpecialTrans(paraList.get(1)));

@@ -118,7 +118,7 @@ public class TestCreateTableVisitor extends PlSqlParserBaseVisitor<String> {
 
 
 
-    //常数、内置函数?
+    //常数、内置函数
     @Override
     public String visitConstant(PlSqlParser.ConstantContext ctx){
         System.out.println("visitConstant：" + ctx.getText());

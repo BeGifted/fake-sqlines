@@ -59,6 +59,7 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         return selectStat.append(";").toString();
     }
 
+    //TODO ROWNUM
     void loadStrategy(){
         for(int ST:TransStrategy)
             switch (ST){
