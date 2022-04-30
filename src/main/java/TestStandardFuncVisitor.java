@@ -121,10 +121,10 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 sb.append("GROUP_CONCAT(");
                 if(paraList.get(1).equals("'") && paraList.get(2).equals("'")) {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ").append(paraList.get(3)).append("SEPARATOR ").append("',' ").append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(3)).append(" SEPARATOR ").append("',' ").append(")\n");
                 }else {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ").append(paraList.get(2)).append(" ").append("SEPARATOR ").append(paraList.get(1)).append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(2)).append(" SEPARATOR ").append(paraList.get(1)).append(")\n");
                 }
                 return sb.toString();
             }

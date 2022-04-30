@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import sql.PlSqlLexer;
 import sql.PlSqlParser;
@@ -13,7 +14,7 @@ public class TranslatorTest extends TestCase{
         String sqlSelect1= "SELECT LPAD('abc',7),'def' FROM DUAL;" +
                 "SELECT TRUNC(SYSDATE) FROM DUAL;";
         SQLtmp.SQL = sqlSelect1;
-        ANTLRInputStream input = new ANTLRInputStream(sqlSelect1);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlSelect1);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
@@ -35,7 +36,7 @@ public class TranslatorTest extends TestCase{
                 "    \"dept\"\n" +
                 "WHERE \"salary\" > 50000\n" +
                 "    AND \"emp\".\"deptno\" = \"dept\".\"deptno\"(+) ";
-        ANTLRInputStream input = new ANTLRInputStream(sqlSelect2);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlSelect2);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
@@ -50,7 +51,7 @@ public class TranslatorTest extends TestCase{
     public void testSqlSelect3() {
         //selectTest
         String sqlSelect3 = "SELECT '='||TRIM(' HELLO ')||'=' FROM DUAL;";
-        ANTLRInputStream input = new ANTLRInputStream(sqlSelect3);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlSelect3);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
@@ -65,7 +66,7 @@ public class TranslatorTest extends TestCase{
     public void testSqlSelect4(){
         //selectTest
         String sqlSelect4 = "SELECT SYS_GUID(),SYSTIMESTAMP,'oracle' FROM DUAL;";;
-        ANTLRInputStream input = new ANTLRInputStream(sqlSelect4);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlSelect4);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
@@ -84,7 +85,7 @@ public class TranslatorTest extends TestCase{
                 "FROM T_BASE_USERDEPT 't1' LEFT JOIN T_BASE_DEPT 't2' ON 't1.fdept_id' = 't2.id'\n" +
                 "WHERE 't1.fuser_id' = 1;";
         SQLtmp.SQL = sqlSelect5;
-        ANTLRInputStream input = new ANTLRInputStream(sqlSelect5);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlSelect5);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
@@ -121,7 +122,7 @@ public class TranslatorTest extends TestCase{
                 "  CONSTRAINT PK_T_DICT PRIMARY KEY(ID)\n" +
                 ");";
 
-        ANTLRInputStream input = new ANTLRInputStream(sqlCreate);   //将输入转成antlr的input流
+        CharStream input = CharStreams.fromString(sqlCreate);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
