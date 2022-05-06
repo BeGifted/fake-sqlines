@@ -144,6 +144,7 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
             }
             case "TO_NUMBER"->{
                 //TODO TO_NUMBER
+
             }
 
         }

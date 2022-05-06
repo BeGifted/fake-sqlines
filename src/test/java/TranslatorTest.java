@@ -5,13 +5,13 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import sql.PlSqlLexer;
 import sql.PlSqlParser;
 
-public class TranslatorTest extends TestCase{
+public class TranslatorTest extends TestCase {
 
     public static String SQL;
 
     public void testSqlSelect1() {
         //selectTest
-        String sqlSelect1= "SELECT LPAD('abc',7),'def' FROM DUAL;" +
+        String sqlSelect1 = "SELECT LPAD('abc',7),'def' FROM DUAL;" +
                 "SELECT TRUNC(SYSDATE) FROM DUAL;";
         SQLtmp.SQL = sqlSelect1;
         CharStream input = CharStreams.fromString(sqlSelect1);   //将输入转成antlr的input流
@@ -26,6 +26,7 @@ public class TranslatorTest extends TestCase{
         TestTreeVisitor loader = new TestTreeVisitor();
         loader.visit(tree);
     }
+
     public void testSqlSelect2() {
         //selectTest
         String sqlSelect2 = "SELECT\n" +
@@ -48,6 +49,7 @@ public class TranslatorTest extends TestCase{
         TestTreeVisitor loader = new TestTreeVisitor();
         loader.visit(tree);
     }
+
     public void testSqlSelect3() {
         //selectTest
         String sqlSelect3 = "SELECT '='||TRIM(' HELLO ')||'=' FROM DUAL;";
@@ -63,9 +65,11 @@ public class TranslatorTest extends TestCase{
         TestTreeVisitor loader = new TestTreeVisitor();
         loader.visit(tree);
     }
-    public void testSqlSelect4(){
+
+    public void testSqlSelect4() {
         //selectTest
-        String sqlSelect4 = "SELECT SYS_GUID(),SYSTIMESTAMP,'oracle' FROM DUAL;";;
+        String sqlSelect4 = "SELECT SYS_GUID(),SYSTIMESTAMP,'oracle' FROM DUAL;";
+        ;
         CharStream input = CharStreams.fromString(sqlSelect4);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
@@ -134,4 +138,46 @@ public class TranslatorTest extends TestCase{
         TestTreeVisitor loader = new TestTreeVisitor();
         loader.visit(tree);
     }
+
+    public void testSqlAlter1() {
+        //AlterTest
+        String sqlAlter = "ALTER TABLE CUSTOMERS\n" +
+                "ADD (CUSTOMER_AGE VARCHAR2(50),\n" +
+                "     CUSTOMER_SEX VARCHAR2(50),\n" +
+                "     CUSTOMER_NAME VARCHAR2(50)\n" +
+                "     );";
+        SQLtmp.SQL = sqlAlter;
+        CharStream input = CharStreams.fromString(sqlAlter);   //将输入转成antlr的input流
+        //词法分析
+        PlSqlLexer lexer = new PlSqlLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
+        tokens.fill();
+        System.out.println("token打印：" + tokens.getTokens());
+        //语法分析
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext tree = parser.sql_script();
+        TestTreeVisitor loader = new TestTreeVisitor();
+        loader.visit(tree);
+    }
+
+    public void testSqlAlter2() {
+        //AlterTest
+        String sqlAlter = "ALTER TABLE CUSTOMERS\n" +
+                "MODIFY (CUSTOMER_NAME VARCHAR2(100) NOT NULL, \n" +
+                "        CITY VARCHAR2(100)\n" +
+                "        );";
+        SQLtmp.SQL = sqlAlter;
+        CharStream input = CharStreams.fromString(sqlAlter);   //将输入转成antlr的input流
+        //词法分析
+        PlSqlLexer lexer = new PlSqlLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
+        tokens.fill();
+        System.out.println("token打印：" + tokens.getTokens());
+        //语法分析
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext tree = parser.sql_script();
+        TestTreeVisitor loader = new TestTreeVisitor();
+        loader.visit(tree);
+    }
+
 }

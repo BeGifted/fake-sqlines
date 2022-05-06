@@ -42,6 +42,14 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitAlter_table(PlSqlParser.Alter_tableContext ctx){
+        TestAlterTableVisitor loader = new TestAlterTableVisitor();
+        String function = loader.visitAlter_table(ctx);
+        System.out.println("转换后的Alter语句为:\n"+function);
+        return null;
+    }
+
 
 
     //RuleContext.getText()代码
