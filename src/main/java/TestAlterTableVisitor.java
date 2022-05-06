@@ -15,8 +15,6 @@ import java.util.function.ToDoubleBiFunction;
 
 public class TestAlterTableVisitor extends PlSqlParserBaseVisitor<String> {
 
-    //TODO alterTable
-
     StringBuilder alterStat;
     int type, flagParen;
     List<String> alter_elems;

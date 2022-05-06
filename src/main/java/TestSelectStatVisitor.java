@@ -59,7 +59,6 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
         return selectStat.append(";").toString();
     }
 
-    //TODO ROWNUM
     void loadStrategy(){
         for(int ST:TransStrategy)
             switch (ST){
@@ -108,6 +107,18 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
                     for(int i = 0; i < siz; i++){
                         selectStat.append(select_elems.get(i));
                         if(i < siz - 1) selectStat.append(",");
+                    }
+                }
+                case TestStrategies.ROWNUM -> {
+                    if(where_clause.contains("<=")){
+                        where_clause = where_clause.replace("WHERE ROWNUM <=", "LIMIT");
+                    }else if(where_clause.contains("=")){
+                        where_clause = where_clause.replace("WHERE ROWNUM =", "LIMIT");
+                        String[] arr = where_clause.split(" ");
+                        String tmp = String.valueOf(Integer.parseInt(arr[1]) - 1);
+                        where_clause = arr[0] + " " + tmp;
+                    }else{
+                        where_clause = where_clause.replace("WHERE ROWNUM <", "LIMIT");
                     }
                 }
                 default -> {
@@ -176,6 +187,9 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
             }
             case "SYSTIMESTAMP" -> {
                 select_elems.set(counter, "CURRENT_TIMESTAMP");
+            }
+            case "ROWNUM" -> {
+                TransStrategy.add(TestStrategies.ROWNUM);
             }
         }
         return visitChildren(ctx);

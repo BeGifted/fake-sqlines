@@ -102,6 +102,22 @@ public class TranslatorTest extends TestCase {
         loader.visit(tree);
     }
 
+    public void testSqlSelect6() {
+        //selectTest
+        String sqlSelect6 = "SELECT 'age', 'name' FROM \"tb1\" WHERE ROWNUM = 10;";
+        SQLtmp.SQL = sqlSelect6;
+        CharStream input = CharStreams.fromString(sqlSelect6);   //将输入转成antlr的input流
+        //词法分析
+        PlSqlLexer lexer = new PlSqlLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);  //转成token流
+        tokens.fill();
+        System.out.println("token打印：" + tokens.getTokens());
+        //语法分析
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext tree = parser.sql_script();
+        TestTreeVisitor loader = new TestTreeVisitor();
+        loader.visit(tree);
+    }
 
     public void testSqlCreate() {
         //createTest
