@@ -1,0 +1,68 @@
+___________
+SELECT
+    "dname",
+    "loc"
+FROM
+    "emp",
+    "dept"
+WHERE "emp"."deptno" = "dept"."deptno"(+)
+    AND "salary" > 50000
+____________
+SELECT
+    "dname",
+    "loc"
+FROM "emp" LEFT OUTER JOIN "dept" ON "emp"."deptno" = "dept"."deptno"
+WHERE "salary" > 50000;
+
+
+
+CREATE TABLE T_DICT (
+                  ID VARCHAR2(32) DEFAULT SYS_GUID() NOT NULL ,
+                  CLASS_ID VARCHAR2(20) ,
+                  CLASS_NAME VARCHAR2(100) ,
+                  CLASS_ENAME VARCHAR2(2000) ,
+                  KEY_ID VARCHAR2(20) ,
+                  KEY_NAME VARCHAR2(500) ,
+                  KEY_ENAME VARCHAR2(2000) ,
+                  OR_VALID_D VARCHAR2(1) DEFAULT 0 ,
+                  MEMO VARCHAR2(2000) ,
+                  TIME_MARK TIMESTAMP(6) ,
+                  STA VARCHAR2(10) DEFAULT 1 ,
+                  KEY_SEQ NUMBER(20) ,
+                  CREATE_PRSN VARCHAR2(64) ,
+                  CREATE_TIME TIMESTAMP(6) DEFAULT SYSTIMESTAMP ,
+                  UPDATE_PRSN VARCHAR2(64) ,
+                  UPDATE_TIME TIMESTAMP(6) DEFAULT SYSTIMESTAMP ,
+                  FDELETE_ID VARCHAR2(1) DEFAULT 0  NOT NULL ,
+                  CONSTRAINT PK_T_DICT PRIMARY KEY(ID)
+                );
+
+
+SELECT LPAD('abc',7),'def' FROM DUAL;
+
+
+SELECT LISTAGG('t2.id', ',') WITHIN GROUP (ORDER BY 't2.id')
+FROM T_BASE_USERDEPT 't1' LEFT JOIN T_BASE_DEPT 't2' ON 't1.fdept_id' = 't2.id'
+WHERE 't1.fuser_id' = 1;
+
+SELECT
+    GROUP_CONCAT(t2.id
+    order by
+        t2.id SEPARATOR ',')
+from
+    T_BASE_USERDEPT t1 left join T_BASE_DEPT t2 on t1.fdept_id = t2.id
+where t1.fuser_id = 1;
+
+
+
+ALTER TABLE CUSTOMERS
+ADD (CUSTOMER_AGE VARCHAR2(50),
+     CUSTOMER_SEX VARCHAR2(50),
+     CUSTOMER_NAME VARCHAR2(50)
+     );
+
+
+ALTER TABLE CUSTOMERS
+MODIFY (CUSTOMER_NAME VARCHAR2(100) NOT NULL,
+        CITY VARCHAR2(100)
+        );

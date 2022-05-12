@@ -5,14 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>helloworld</artifactId>
+    <artifactId>fake-sqlines</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <packaging>war</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
@@ -42,28 +49,24 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.antlr</groupId>-->
-<!--                <artifactId>antlr4</artifactId>-->
-<!--                <version>4.9.3</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>antlr</id>-->
-<!--                        <goals>-->
-<!--                            <goal>antlr4</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>none</phase>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <outputDirectory>src/test/java</outputDirectory>-->
-<!--                    <listener>true</listener>-->
-<!--                    <treatWarningsAsErrors>true</treatWarningsAsErrors>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
+    <build>
+        <plugins>
+            <!--Tomcat插件 -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>80</port><!--访问端口号 -->
+                    <!--项目访问路径
+                        未配置访问路径: http://localhost:80/tomcat-demo2/a.html
+                        配置/后访问路径: http://localhost:80/a.html
+                        如果配置成 /hello,访问路径会变成什么?
+                            答案: http://localhost:80/hello/a.html
+                    -->
+                    <path>/</path>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

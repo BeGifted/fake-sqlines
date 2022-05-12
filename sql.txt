@@ -1,0 +1,2 @@
+SELECT LPAD('abc',7,' '), 'def';
+

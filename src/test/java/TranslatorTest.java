@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import sql.PlSqlLexer;
 import sql.PlSqlParser;
+import tmp.SQLtmp;
+import tmp.TestTreeVisitor;
 
 public class TranslatorTest extends TestCase {
 
