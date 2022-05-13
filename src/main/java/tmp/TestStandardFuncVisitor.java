@@ -22,11 +22,15 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
         paras_in_paren="";
         func_name ="";
         //在下面写死内置函数的映射关系
-        function_non_trans=List.of("ABS","ACOS","ASCII","ASIN","ATAN","ATAN2","CEIL","COALESCE","COS","EXP","FLOOR","GREATEST",
-                "LEAST","LN","LOCALTIMESTAMP","LOG","LOWER","MOD","NULLIF","POWER","ROUND","SIGN","SIN","SOUNDEX","SQRT","SUBSTR",
-                "TAN","TRIM","UPPER");
-        function_cannot_trans=List.of("ASCIISTR","BIN_TO_NUM","DECODE","INITCAP","MONTHS_BETWEEN","NEXT_DAY","TRANSLATE",
-                "TO_LOB","TO_NCHAR","TO_NCLOB","TO_NUMBER","TO_SINGLE_BYTE","TO_TIMESTAMP","USERENV","VSIZE");
+        function_non_trans=List.of("ABS","ACOS","ASCII","ASIN","ATAN","ATAN2","CEIL",
+                "COALESCE","COS","EXP","FLOOR","GREATEST",
+                "LEAST","LN","LOCALTIMESTAMP","LOG","LOWER",
+                "MOD","NULLIF","POWER","ROUND","SIGN","SIN",
+                "SOUNDEX","SQRT","SUBSTR","TAN","TRIM","UPPER");
+        function_cannot_trans=List.of("ASCIISTR","BIN_TO_NUM","DECODE","INITCAP",
+                "MONTHS_BETWEEN","NEXT_DAY","TRANSLATE",
+                "TO_LOB","TO_NCHAR","TO_NCLOB","TO_NUMBER",
+                "TO_SINGLE_BYTE","TO_TIMESTAMP","USERENV","VSIZE");
         function_non_paras=new HashMap<>();
         function_non_paras.put("LENGTH","CHAR_LENGTH");
         function_non_paras.put("CHR","CHAR");
