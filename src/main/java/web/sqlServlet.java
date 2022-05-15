@@ -21,15 +21,16 @@ import tmp.TestTreeVisitor;
 public class sqlServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ByteArrayOutputStream baoStream = new ByteArrayOutputStream(1024);
-        PrintStream cacheStream = new PrintStream(baoStream);// 临时输出
-        PrintStream oldStream = System.out;// 缓存系统输出
-        System.setOut(cacheStream);
+//        ByteArrayOutputStream baoStream = new ByteArrayOutputStream(1024);
+//        PrintStream cacheStream = new PrintStream(baoStream);// 临时输出
+//        PrintStream oldStream = System.out;// 缓存系统输出
+//        System.setOut(cacheStream);
 
         //接收oracle
         String oracle = request.getParameter("oracle");
         SQLtmp.SQL = oracle;
         SQLtmp.SQL2 = "";
+        System.out.println(oracle);
 
         CharStream input = CharStreams.fromString(oracle);   //将输入转成antlr的input流
         //词法分析
@@ -45,17 +46,14 @@ public class sqlServlet extends HttpServlet {
 
         String mysql = SQLtmp.SQL2;
 
-        File f = new File("C:\\Users\\mabeg\\Desktop\\fake-sqlines\\sql.txt");
-        FileOutputStream fop = new FileOutputStream(f);
-        OutputStreamWriter writer = new OutputStreamWriter(fop, "UTF-8");
-        writer.write(mysql);
-        writer.close();
-        fop.close();
+//        File f = new File("C:\\Users\\mabeg\\Desktop\\fake-sqlines\\sql.txt");
+//        FileOutputStream fop = new FileOutputStream(f);
+//        OutputStreamWriter writer = new OutputStreamWriter(fop, "UTF-8");
+//        writer.write(mysql);
+//        writer.close();
+//        fop.close();
 
-        String message = baoStream.toString();
-        System.setOut(oldStream);// 还原到系统输出
-        System.out.println(message);
-        response.getWriter().write(message);
+        response.getWriter().write(mysql);
 
     }
 

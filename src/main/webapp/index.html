@@ -69,15 +69,12 @@
 
         function open_file1()
         {
-            var content = editAreaLoader.getValue("oracle");
+            var content = editAreaLoader.getValue("mysql");
             console.log(content);
-            // doSave(content, "txt", "C:\\Users\\mabeg\\Desktop\\fake-sqlines\\sql.txt");
+            doSave(content, "txt", "mysql.txt");
         }
 
-        $("#convert").click(function () {
-            $("#files").click();
-        })
-        function open_file2()
+        function open_file()
         {
             //获取读取文件的File对象
             var selectedFile = document.getElementById('files').files[0];
@@ -90,21 +87,35 @@
             reader.onload = function () {
                 //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
                 console.log(this.result);
-                editAreaLoader.setValue("mysql", this.result);
+                editAreaLoader.setValue("oracle", this.result);
             }
-
-
-
         }
 
-        function close_file1()
+        function open_file2()
         {
-            editAreaLoader.closeFile('example_2', "to\\ é # € to");
-        }
+            //2. 发送ajax请求
+            // 获取用户名的值
+            var oracle = editAreaLoader.getValue("oracle");
 
-        function toogle_editable(id)
-        {
-            editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
+            //2.1. 创建核心对象
+            var xhttp;
+            if (window.XMLHttpRequest) {
+                xhttp = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            //2.2. 发送请求
+            xhttp.open("GET", "http://localhost:80/sqlServlet?oracle="+oracle);
+            xhttp.send();
+
+            //2.3. 获取响应
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    editAreaLoader.setValue("oracle", oracle);
+                    editAreaLoader.setValue("mysql", this.responseText);
+                }
+            };
         }
 
         function sql(){
@@ -122,14 +133,17 @@
            <textarea id="oracle" style="height: 250px; width: 100%;" name="oracle"></textarea>
            <form>
            <p>Custom controls:<br />
-               <input type="file" id="files" name="files" onchange="open_file2();">
-               <input type='submit' onclick='form.reset();open_file2();' id='convert' value='Convert' />
+               <input type="file" id="files" name="files" onchange="open_file();">
+               <input type='button' onclick='open_file2();' id='convert' value='Convert' />
            </p>
            </form>
        </fieldset>
        <fieldset>
            <legend>Target: MySQL</legend>
            <textarea id="mysql" style="height: 250px; width: 100%;" name="mysql"></textarea>
+           <p>Custom controls:<br />
+               <input type='button' onclick='open_file1();' id='save' value='Save' />
+           </p>
        </fieldset>
    </div>
 
