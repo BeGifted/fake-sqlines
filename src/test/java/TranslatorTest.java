@@ -39,6 +39,7 @@ public class TranslatorTest extends TestCase {
                 "    \"dept\"\n" +
                 "WHERE \"salary\" > 50000\n" +
                 "    AND \"emp\".\"deptno\" = \"dept\".\"deptno\"(+) ";
+        SQLtmp.SQL = sqlSelect2;
         CharStream input = CharStreams.fromString(sqlSelect2);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
@@ -55,6 +56,7 @@ public class TranslatorTest extends TestCase {
     public void testSqlSelect3() {
         //selectTest
         String sqlSelect3 = "SELECT '='||TRIM(' HELLO ')||'=' FROM DUAL;";
+        SQLtmp.SQL = sqlSelect3;
         CharStream input = CharStreams.fromString(sqlSelect3);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
@@ -71,7 +73,7 @@ public class TranslatorTest extends TestCase {
     public void testSqlSelect4() {
         //selectTest
         String sqlSelect4 = "SELECT SYS_GUID(),SYSTIMESTAMP,'oracle' FROM DUAL;";
-        ;
+        SQLtmp.SQL = sqlSelect4;
         CharStream input = CharStreams.fromString(sqlSelect4);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);
@@ -144,6 +146,7 @@ public class TranslatorTest extends TestCase {
                 "  CONSTRAINT PK_T_DICT PRIMARY KEY(ID)\n" +
                 ");";
 
+        SQLtmp.SQL = sqlCreate;
         CharStream input = CharStreams.fromString(sqlCreate);   //将输入转成antlr的input流
         //词法分析
         PlSqlLexer lexer = new PlSqlLexer(input);

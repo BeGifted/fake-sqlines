@@ -49,9 +49,9 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
 //            return ctx.getText();
 //        }
         if(!from_clause.isEmpty()){
-            selectStat.append(" ").append(from_clause);
+            selectStat.append(" \n").append(from_clause);
             if(!where_clause.isEmpty()){
-                selectStat.append(" ").append(where_clause);
+                selectStat.append(" \n").append(where_clause);
             }
             return selectStat.append(";").toString();
         }
@@ -71,6 +71,7 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
                         System.out.println("异常策略"+ST);
                     }
                     int siz = where_exprs.size();
+                    int flag = -1;
                     for (int i = 0; i < siz; i++) {
                         String where_expr = where_exprs.get(i);
                         if (where_expr.endsWith("(+)")) {
@@ -79,18 +80,20 @@ public class TestSelectStatVisitor extends PlSqlParserBaseVisitor<String> {
                             }else{
                                 expr_oprs.remove(i - 1);
                             }
+                            flag = i;
                             from_clause=String.format("FROM %s LEFT OUTER JOIN %s ON %s",
                                     from_tabs.get(0),from_tabs.get(1),
                                     where_expr.replace("(+)",""));
                         }
                     }
-                    if(where_exprs.isEmpty())
+                    if(flag != -1 && siz == 1 ||where_exprs.isEmpty())
                         break;
                     StringBuilder whereBulider=new StringBuilder("WHERE ");
-                    for(int i = 0; i < siz - 1; i++){
+                    for(int i = 0; i < siz; i++){
+                        if(flag == i) continue;
                         String where_expr = where_exprs.get(i);
                         whereBulider.append(where_expr);
-                        if(i != siz - 2) whereBulider.append(" ").append(expr_oprs.get(i)).append(" ");
+                        if(i != siz - 1 && flag != (i + 1)) whereBulider.append(" ").append(expr_oprs.get(i)).append(" ");
                     }
                     where_clause=whereBulider.toString();
                 }

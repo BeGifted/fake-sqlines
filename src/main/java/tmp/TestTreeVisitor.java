@@ -21,6 +21,7 @@ public class TestTreeVisitor extends PlSqlParserBaseVisitor<Void> {
 
     @Override
     public Void visitQuery_block(PlSqlParser.Query_blockContext ctx) {
+        System.out.println(SQLtmp.SQL);
         TestSelectStatVisitor loader=new TestSelectStatVisitor();
         String stat=loader.visitQuery_block(ctx);
         System.out.println("Select SQL:\n"+stat);

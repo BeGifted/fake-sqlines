@@ -78,14 +78,9 @@
         {
             //获取读取文件的File对象
             var selectedFile = document.getElementById('files').files[0];
-            var name = selectedFile.name;//读取选中文件的文件名
-            var size = selectedFile.size;//读取选中文件的大小
-            console.log("文件名:"+name+"大小:"+size);
-
-            var reader = new FileReader();//这是核心,读取操作就是由它完成.
-            reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+            var reader = new FileReader();
+            reader.readAsText(selectedFile);
             reader.onload = function () {
-                //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
                 console.log(this.result);
                 editAreaLoader.setValue("oracle", this.result);
             }
@@ -93,23 +88,19 @@
 
         function open_file2()
         {
-            //2. 发送ajax请求
-            // 获取用户名的值
             var oracle = editAreaLoader.getValue("oracle");
-
-            //2.1. 创建核心对象
+            console.log(oracle);
+            var Oracle = oracle;
+            Oracle = Oracle.replace(/\+/g,"%2B");
+            Oracle = Oracle.replace(/\&/g,"%26");
             var xhttp;
             if (window.XMLHttpRequest) {
                 xhttp = new XMLHttpRequest();
             } else {
-                // code for IE6, IE5
                 xhttp = new ActiveXObject("Microsoft.XMLHTTP");
             }
-            //2.2. 发送请求
-            xhttp.open("GET", "http://localhost:80/sqlServlet?oracle="+oracle);
+            xhttp.open("GET", "http://localhost:80/sqlServlet?oracle=".concat(Oracle));
             xhttp.send();
-
-            //2.3. 获取响应
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     editAreaLoader.setValue("oracle", oracle);
@@ -130,7 +121,7 @@
    <div class="fieldClass">
        <fieldset>
            <legend>Source: Oracle</legend>
-           <textarea id="oracle" style="height: 250px; width: 100%;" name="oracle"></textarea>
+           <textarea id="oracle" style="height: 250px; width: 100%; white-space: pre-line" name="oracle"></textarea>
            <form>
            <p>Custom controls:<br />
                <input type="file" id="files" name="files" onchange="open_file();">
@@ -140,7 +131,7 @@
        </fieldset>
        <fieldset>
            <legend>Target: MySQL</legend>
-           <textarea id="mysql" style="height: 250px; width: 100%;" name="mysql"></textarea>
+           <textarea id="mysql" style="height: 250px; width: 100%; white-space: pre-line" name="mysql"></textarea>
            <p>Custom controls:<br />
                <input type='button' onclick='open_file1();' id='save' value='Save' />
            </p>
