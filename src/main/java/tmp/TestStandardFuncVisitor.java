@@ -127,10 +127,10 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 sb.append("GROUP_CONCAT(");
                 if(paraList.get(1).equals("'") && paraList.get(2).equals("'")) {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ").append(paraList.get(3)).append(" SEPARATOR ").append("',' ").append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(3)).append(" SEPARATOR ").append("',' ").append(")");
                 }else {
                     sb.append(paraList.get(0)).append(" ");
-                    sb.append("ORDER BY ").append(paraList.get(2)).append(" SEPARATOR ").append(paraList.get(1)).append(")\n");
+                    sb.append("ORDER BY ").append(paraList.get(2)).append(" SEPARATOR ").append(paraList.get(1)).append(")");
                 }
                 return sb.toString();
             }
@@ -183,7 +183,9 @@ public class TestStandardFuncVisitor extends PlSqlParserBaseVisitor<String> {
                 List.of("MI","%i"),List.of("SS","%s")
         );
         for(List<String> map:FS)
-            if(para.contains(map.get(0)))   para=para.replace(map.get(0),map.get(1));
+            if(para.contains(map.get(0))) {
+                para = para.replace(map.get(0), map.get(1));
+            }
         return para;
     }
 
